@@ -4,6 +4,7 @@ import tkinter as tk
 import socket
 import random
 import re
+import threading
 
 from tkinter import font as tkFont
 from PIL import ImageTk, Image
@@ -29,6 +30,7 @@ class Button(object):
         self.button = tk.Button(master=None,text=text, fg=color,
                                 command=command, image=image, compound='center', borderwidth=5)
         self.button.config(height=self.h,width=self.w,bg='grey')
+        self.thread = []
         
     def draw(self,x,y):
         self.button.pack(fill='both', expand='yes')
@@ -129,10 +131,12 @@ class GUI_Windows(object):
                                    math.ceil(img.height()/2),
                                    image=img)
         display_bar = Button(self.canvas,text="Bar Chart", h=1, w=7,
-                                  color="Blue",command=lambda: self.show_bar())
+                                  color="Blue",
+                             command=lambda: threading.Thread(target=self.show_bar()).start())
         display_bar.draw(1250,20)
         display_line = Button(self.canvas,text="Line Chart", h=1, w=7,
-                                  color="Blue",command=lambda: self.show_line())
+                                  color="Blue",
+                              command=lambda: threading.Thread(target=self.show_line()).start())
         display_line.draw(1250,50)
         quit_button = Button(self.canvas,text="EXIT",h=1,w=7,
                      color="Red",command=lambda: self.exit())
@@ -183,4 +187,3 @@ class GUI_Windows(object):
             plot.data = data
             plot.line_plot()
             plt.pause(.5)
-        
